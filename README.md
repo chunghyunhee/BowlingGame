@@ -19,3 +19,6 @@
 4. 확률값 계산 방법 (초급자/중급자/고급자)
   --> (점수) = 10*(#spare)+10*(#strike)+4.5*(#spare)+9*(#strike)+8.55*(10-#strike-#spare)의 형태의 규격으로
   맞춘 후에 확률을 맞춰서 함수로 지정해 준다.
+
+## 최종 출력 Board
+![image](https://user-images.githubusercontent.com/49298791/83949926-c1816c00-a861-11ea-91d5-329bb98e872e.png)
