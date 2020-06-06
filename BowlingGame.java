@@ -1,10 +1,17 @@
+/*
+ * 프로그램명 	: GameProj/BowlingGame.java
+ * 프로그램 설명 : 볼링게임규칙에 따라 두 player가 게임하게 하는 프로그램  
+ * 작성자 		: 정현희
+ * 입력		: player1의 수준, player2의 수준, 게임 진행 여부 입력
+ * 출력		: 매 Frame마다의 진행상황 + score Board출력  
+ */
 import java.util.*;
 
 // 해당 Frame쳤을 때 결과를 출력해주는 함수 
 class ScorePrint{
 	Vector<Point>v = new Vector<Point>();
 	int total;
-	
+
 	public ScorePrint(Vector<Point>v,int total) {
 		this.v = v; this.total = total;
 	}
@@ -83,9 +90,142 @@ class ScorePrint{
 		System.out.println("total:"+total);
 	}
 	
+	// Board를 출력하는 매서드 (player1, player2의 결과가 한꺼번에 나와야 한다. )
+	public void printBoardFirst(Vector<Point>v2, int FrameNum, int total1[], int total2[]) {
+		ScoreState ss1 = new ScoreState(v.get(FrameNum).score1, v.get(FrameNum).score2);
+		ScoreState ss2 = new ScoreState(v2.get(FrameNum).score1, v2.get(FrameNum).score2);
+		
+		// Basic Frame 
+		// player1
+		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.println("        |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10   | ");
+		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.print("player1 |");
+		for(int i=0; i<(FrameNum+1); i++) {
+			if(i==9 && (ss1.IsStrike() || ss1.IsStrike())) {
+				System.out.printf("%2d | %2d | %2d|",v.get(i).score1,v.get(i).score2, v.get(i).score3);
+			}
+			else
+				System.out.printf("%3d|%3d|",v.get(i).score1,v.get(i).score2);
+		}
+		System.out.println();
+		System.out.print("         ");
+		if(FrameNum != 9 && (ss1.IsSpare() || ss1.IsStrike())) {
+			for(int i=0; i<(FrameNum); i++) {
+				//System.out.print("   "+total1[i]+"   ");
+				System.out.printf(" %6d ",total1[i]);
+			}
+		}
+		else {
+			for(int i=0; i<(FrameNum+1); i++) {
+				//System.out.print("   "+total1[i]+"   ");
+				System.out.printf(" %6d ",total1[i]);
+			}
+		}
+
+		System.out.println();
+		// player2
+		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.print("player2 |");
+		for(int i=0; i<(FrameNum); i++) {
+			
+			System.out.printf("%2d | %2d|",v2.get(i).score1,v2.get(i).score2);
+		}
+		System.out.println();
+		System.out.print("         ");
+		
+		if(FrameNum>0) {
+			ScoreState ss3 = new ScoreState(v2.get(FrameNum-1).score1, v2.get(FrameNum-1).score2);
+			if(ss3.IsSpare()|| ss3.IsStrike()) {
+				for(int i=0; i<(FrameNum-1); i++) {
+					//System.out.print("   "+total2[i]+"   ");
+					System.out.printf(" %6d ",total2[i]);
+				}
+			}
+			else {
+				for(int i=0; i<(FrameNum); i++) {
+					//System.out.print("   "+total2[i]+"   ");
+					System.out.printf(" %6d ",total2[i]);
+				}
+			}
+		}
+		else {
+			for(int i=0; i<(FrameNum); i++) {
+				//System.out.print("   "+total2[i]+"   ");
+				System.out.printf(" %6d ",total2[i]);
+			}
+		}
+
+
+		System.out.println();
+		System.out.println("----------------------------------------------------------------------------------------------");
+		
+		
+	}
+	public void printBoardSecond(Vector<Point>v2, int FrameNum, int total1[], int total2[]) {
+		ScoreState ss1 = new ScoreState(v.get(FrameNum).score1, v.get(FrameNum).score2);
+		ScoreState ss2 = new ScoreState(v2.get(FrameNum).score1, v2.get(FrameNum).score2);
+		
+		// Basic Frame 
+		// player1
+		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.println("        |   1   |   2   |   3   |   4   |   5   |   6   |   7   |   8   |   9   |   10   | ");
+		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.print("player1 |");
+		for(int i=0; i<(FrameNum+1); i++) {
+			if(i==9 && (ss1.IsSpare() || ss1.IsStrike())) {
+				System.out.printf("%2d | %2d| %2d|",v.get(i).score1,v.get(i).score2,v.get(i).score3);
+			}
+			else
+				System.out.printf("%3d|%3d|",v.get(i).score1,v.get(i).score2);
+		}
+		System.out.println();
+		System.out.print("         ");
+		if(FrameNum!=9 && (ss1.IsSpare() || ss1.IsStrike())) {
+			for(int i=0; i<(FrameNum); i++) {
+				//System.out.print("   "+total1[i]+"   ");
+				System.out.printf(" %6d ",total1[i]);
+			}
+		}
+		else {
+			for(int i=0; i<(FrameNum+1); i++) {
+				//System.out.print("   "+total1[i]+"   ");
+				System.out.printf(" %6d ",total1[i]);
+			}
+		}
+		System.out.println();
+		
+		// player2
+		System.out.println("----------------------------------------------------------------------------------------------");
+		System.out.print("player2 |");
+		for(int i=0; i<(FrameNum+1); i++) {
+			if(i==9 &&(ss2.IsSpare() || ss2.IsStrike()))
+				System.out.printf("%2d | %2d| %2d|",v2.get(i).score1,v2.get(i).score2, v2.get(i).score3);
+			else
+				System.out.printf("%3d|%3d|",v2.get(i).score1,v2.get(i).score2);
+		}
+		System.out.println();
+		System.out.print("         ");
+		
+		if(FrameNum!=9 && (ss2.IsSpare() || ss2.IsStrike())) {
+			for(int i=0; i<(FrameNum); i++) {
+				//System.out.print("   "+total2[i]+"   ");
+				System.out.printf(" %6d ",total2[i]);
+			}
+		}
+		else {
+			for(int i=0; i<(FrameNum+1); i++) {
+				//System.out.print("   "+total2[i]+"   ");
+				System.out.printf(" %6d ",total2[i]);
+			}
+		}
+		System.out.println();
+		System.out.println("----------------------------------------------------------------------------------------------");
+		
+	}
+	
 }
 
-// 결과 board의 출력 
 
 
 
@@ -178,6 +318,8 @@ class ComputeScore{
 // 첫번째구, 두번째구에서의 점수를 얻어내는 클래스 작성 
 class playGame{
 	String level; 
+	int score2 = 0;
+	int score1 = 0;
 	
 	// 이용자의 수준을 입력받는다 -> 수준에 따라 다르게 진행 
 	public playGame(String level) {
@@ -186,9 +328,8 @@ class playGame{
 	
 	// 각 프레임에서 첫번째 구
 	public int firstBowl(){
-		int score1 = 0;
-		
 		//초보자
+		// 초보자는 모든 값이 나올 확률이 0.08로 다 동일함(그냥 random생성과 동일)
 		if(level.equals("초급자")) {
 			// 나올 수 있는 경우의 확률기반 계산 
 			Random ran = new Random();
@@ -198,50 +339,103 @@ class playGame{
 			}
 		}
 		else if(level.equals("중급자")) {
-			// 나올 수 있는 경우의 확률기반 계산 
-			Random ran = new Random();
-			score1 = ran.nextInt(12)+1; //1~12중 하나의 값 추출 
-			if(score1>10)
-				score1 = 0;
+			// strike 나올 확률이 0.4, spare이 나올 확률이 0.38
+			double d = Math.random();
+			if(d<0.4) {
+				score1 = 10;
+			}
+			else {
+				Random ran = new Random();
+				score1 = ran.nextInt(11)+1; //1~12중 하나의 값 추출 
+				if(score1 >= 10)
+					score1 = 0;
+			}
 		}
-		else {
-			// 나올 수 있는 경우의 확률기반 계산 
-			Random ran = new Random();
-			score1 = ran.nextInt(12)+1; //1~12중 하나의 값 추출 
-			if(score1>10)
-				score1 = 0;
+		else { //고급자
+			// strike칠 확률은 0.7, spare칠 확률은 0.69
+			double d = Math.random();
+			if(d>0.3) {
+				score1 = 10;
+			}
+			else {
+				Random ran = new Random();
+				score1 = ran.nextInt(12)+1; //1~12중 하나의 값 추출 
+				if(score1 >= 10)
+					score1 = 0;
+			}
+			
 		}
 		return score1;
 	}
 	// 각 프레임에서 두번째 구 
 	public int secondBowl() {
-		int score2 = 0;
-		
 		// 초보자
+		// 초보자는 모든 값이 나올 확률이 0.08로 다 동일함(그냥 random생성과 동일)
 		if(level.equals("초급자")) {
-			Random ran = new Random();
-			score2 = ran.nextInt(12)+1; //1~12중 하나의 값 추출 
-			if (score2>10) //마찬가지로 -나 G값중 하나이므로 0점에 해당한다. 
-				score2 = 0;
+			double d = Math.random();
+			// spare가 나올 확률 0.1
+			if(d<0.1) {
+				score2 = 10-score1;
+			}
+			else {
+				// 나머지 값들이 나올 확률은 전부 동일 
+				Random ran = new Random();
+				score2 = ran.nextInt(12)+1; //1~12중 하나의 값 추출 
+				if (score2 > 10) //마찬가지로 -나 G값중 하나이므로 0점에 해당한다. 
+					score2 = 0;
+				else if(score2 == 10-score1) {
+					while(score2 != 10-score1) {
+						score2 = ran.nextInt(12)+1;
+					}
+				}
+			}
 		}
 		else if(level.equals("중급자")) {
-			Random ran = new Random();
-			score2 = ran.nextInt(12)+1; //1~12중 하나의 값 추출 
-			if(score2 > 10)
-				score2 = 0;
+			double d = Math.random();
+			// spare가 나올 확률은 0.38
+			if(d<0.38) {
+				score2 = 10-score1;
+			}
+			else {
+				// 나머지 값들이 나올 확률은 전부 동일 
+				Random ran = new Random();
+				score2 = ran.nextInt(12)+1; //1~12중 하나의 값 추출 
+				if (score2 > 10) //마찬가지로 -나 G값중 하나이므로 0점에 해당한다. 
+					score2 = 0;
+				else if(score2 == 10-score1) {
+					while(score2 != 10-score1) {
+						score2 = ran.nextInt(12)+1;
+					}
+				}
+				
+			}
 		}
-		else {
-			Random ran = new Random();
-			score2 = ran.nextInt(13)+1; //1~12중 하나의 값 추출 
-			if(score2>10)
-				score2 = 0;
+		else { // 고급자
+			// spare이 나올 확률은 0.69
+			double d = Math.random();
+			if(d<0.69) {
+				score2 = 10-score1;
+			}
+			else {
+				// 나머지 값들이 나올 확률은 전부 동일 
+				Random ran = new Random();
+				score2 = ran.nextInt(12)+1; //1~12중 하나의 값 추출 
+				if (score2 > 10) //마찬가지로 -나 G값중 하나이므로 0점에 해당한다. 
+					score2 = 0;
+				else if(score2 == 10-score1) {
+					while(score2 != 10-score1) {
+						score2 = ran.nextInt(12)+1;
+					}
+				}
+			}
 		}
 		return score2;
 	}
+	
 	// 10 Frame에서의 세번째구가 생기는 경우의 값 생성 매서드 
 	public int thirdBowl() {
 		int score3 = 0;
-		
+		// 세번째 굴려서 보너스 점수 받는 경우는 모든 값이 나올 확률이 동일하다고 가정한다
 		// 초보자
 		if(level.equals("초급자")) {
 			Random ran = new Random();
@@ -263,6 +457,7 @@ class playGame{
 		}
 		return score3;
 	}
+	
 	
 }
 
@@ -287,16 +482,21 @@ public class BowlingGame {
 		Scanner sc = new Scanner(System.in);		
 		int check = 0;
 		System.out.println("######### Bowling Game Start !! #########");
-		System.out.print("수준을 선택해주세요 ex(초급자/중급자/고급자) >>");
-		String level = sc.next(); 
-		int score1, score2, score,tmp;
+		System.out.print("player1의 수준을 입력해주세요 (초급자/중급자/고급자) >>");
+		String level1 = sc.next(); 
+		System.out.print("player2의 수준을 입력해주세요 (초급자/중급자/고급자) >>");
+		String level2 = sc.next(); 
+		
+		int score1, score2, score, tmp;
 		int totalScore1 = 0;
 		int totalScore2 = 0;
-
+		int total1[] = new int[10];
+		int total2[] = new int[10];
+		
 		// 선택한 수준에 따라 총 10프레임을 진행한다. 
 		for(int i=0; i<10; i++) {
 			// player1 
-			playGame pg = new playGame(level);
+			playGame pg = new playGame(level1);
 			ComputeScore cs = new ComputeScore(v,totalScore1);
 			ScorePrint sp = new ScorePrint(v,totalScore1);
 			if(i != 9) {
@@ -327,7 +527,7 @@ public class BowlingGame {
 			}
 			
 			// player2
-			playGame pg2 = new playGame(level);
+			playGame pg2 = new playGame(level2);
 			ComputeScore cs2 = new ComputeScore(v2,totalScore2);
 			ScorePrint sp2 = new ScorePrint(v2,totalScore2);
 			
@@ -337,8 +537,8 @@ public class BowlingGame {
 				v2.add(new Point(score1, score2,0));
 			}
 			else if(i==9) {
-				score1 = pg.firstBowl();
-				score2 = pg.secondBowl();
+				score1 = pg2.firstBowl();
+				score2 = pg2.secondBowl();
 				ScoreState ss = new ScoreState(score1, score2);
 				// spare가 나오는 경우 
 				if(ss.IsSpare()) {
@@ -346,10 +546,10 @@ public class BowlingGame {
 					int score3 = pg.thirdBowl();
 					v2.add(new Point(score1, score2,score3));
 				}
-				// spike가 나온느 경우
+				// spike가 나오는 경우
 				else if(ss.IsStrike()) {
 					check = -1;
-					int score3 = pg.thirdBowl();
+					int score3 = pg2.thirdBowl();
 					v2.add(new Point(score1, score2,score3));
 				}
 				else {
@@ -371,6 +571,7 @@ public class BowlingGame {
 			System.out.println("########## player1의 차례입니다 ###########");
 			score = cs.Score(i); 					// ith Frame score compute
 			totalScore1 += score;
+			total1[i] = totalScore1;
 			
 			sp.printFrameNum(i);
 			System.out.println("첫번째 구를 치실 준비가 되시면  아무키나 눌러주세요!");
@@ -382,20 +583,29 @@ public class BowlingGame {
 				sp.printPoint2(i);
 			}
 			if(i==9) {
-				if(check == -1)
+				if(check == -1) {
+					System.out.println("세번째 구를 치실 준비가 되시면  아무키나 눌러주세요!");
+					String ans7 = sc.next();
 					sp.printPoint3(i);
+				}
 			}
 			
 			// spare나 strike면  total 점수는 다음 프레임을 진행한 후에 출력한다. 
 			if(ss.IsSpare() || ss.IsStrike()) {
-				tmp = totalScore1; 
-				System.out.println("보너스 점수가 있습니다. 다음 프레임을 치면 total점수를 계산합니다.");
+				if(i ==9) {
+					System.out.println("total :"+totalScore1);
+				}
+				else {
+					tmp = totalScore1; 
+					System.out.println("보너스 점수가 있습니다. 다음 프레임을 치면 total점수를 계산합니다.");
+				}
 			}
 			else {
 				System.out.println("total :"+totalScore1);
 			}
-			System.out.println("total :"+totalScore1);
+			
 			System.out.println();
+			sp.printBoardFirst(v2,i, total1, total2);
 			
 			// for player2
 			ComputeScore cs2 = new ComputeScore(v2,totalScore2);
@@ -403,6 +613,7 @@ public class BowlingGame {
 			System.out.println("########## player2의 차례입니다 ###########");
 			score = cs2.Score(i); 					// ith Frame score compute
 			totalScore2 += score;
+			total2[i] = totalScore2;
 				
 			sp2.printFrameNum(i);
 			System.out.println("첫번째 구를 치실 준비가 되시면  아무키나 눌러주세요!");
@@ -415,19 +626,29 @@ public class BowlingGame {
 			}
 			
 			if(i==9) {
-				if(check==-1)
+				if(check==-1) {
+					System.out.println("세번째 구를 치실 준비가 되시면  아무키나 눌러주세요!");
+					String ans5 = sc.next();
 					sp2.printPoint3(i);
+				}
 			}
 			// spare나 strike면  total 점수는 다음 프레임을 진행한 후에 출력한다. 
 			if(ss2.IsSpare() || ss2.IsStrike()) {
-				tmp = totalScore2; 
-				System.out.println("보너스 점수가 있습니다. 다음 프레임을 치면 total점수를 계산합니다.");
+				if(i==9) {
+					System.out.println("total :"+totalScore2);
+				}
+				else {
+					tmp = totalScore2; 
+					System.out.println("보너스 점수가 있습니다. 다음 프레임을 치면 total점수를 계산합니다.");
+				}
+
 			}
 			else {
 				System.out.println("total :"+totalScore2);
 			}
 
 			System.out.println();
+			sp.printBoardSecond(v2,i, total1, total2);
 			
 			
 		}
